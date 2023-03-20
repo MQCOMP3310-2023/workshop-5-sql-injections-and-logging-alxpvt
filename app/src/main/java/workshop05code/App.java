@@ -29,7 +29,7 @@ public class App {
 
     private static final Logger logger = Logger.getLogger(App.class.getName());
     // End code for logging exercise
-    
+
     /**
      * @param args the command line arguments
      */
@@ -56,7 +56,8 @@ public class App {
             String line;
             int i = 1;
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                logger.log(Level.INFO,line);
+                //System.out.println(line);
                 wordleDatabaseConnection.addValidWord(i, line);
                 i++;
             }
@@ -64,6 +65,7 @@ public class App {
         } catch (IOException e) {
             System.out.println("Not able to load . Sorry!");
             System.out.println(e.getMessage());
+            logger.log(Level.WARNING,"Exception", e);
             return;
         }
 
@@ -72,17 +74,23 @@ public class App {
         try (Scanner scanner = new Scanner(System.in)) {
             System.out.print("Enter a 4 letter word for a guess or q to quit: ");
             String guess = scanner.nextLine();
+            
 
             while (!guess.equals("q")) {
                 System.out.println("You've guessed '" + guess+"'.");
                 String re = "[a-z]{4}";
-
-                if (wordleDatabaseConnection.isValidWord(guess)) { 
+                if(guess.matches(re)){
+                 if (wordleDatabaseConnection.isValidWord(guess)) { 
                     System.out.println("Success! It is in the the list.\n");
-                }else{
+                 }else{
                     System.out.println("Sorry. This word is NOT in the the list.\n");
                 }
 
+
+            } else {
+                logger.log(Level.INFO,"Invalid guess");
+                System.out.print("Invalid input! ");
+            }
                 System.out.print("Enter a 4 letter word for a guess or q to quit: " );
                 guess = scanner.nextLine();
             }
@@ -90,5 +98,7 @@ public class App {
             e.printStackTrace();
         }
 
+        logger.log(Level.INFO,"The guess program runs");
     }
+    
 }
